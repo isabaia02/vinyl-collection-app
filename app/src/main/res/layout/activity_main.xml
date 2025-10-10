@@ -1,0 +1,178 @@
+<?xml version="1.0" encoding="utf-8"?>
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/main"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    tools:context=".NewVinylActivity">
+
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <TextView
+            android:id="@+id/textViewTitle"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="@string/app_name"
+            android:textSize="24sp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="0.498"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="0.052" />
+
+        <TextView
+            android:id="@+id/textViewName"
+            android:layout_width="42dp"
+            android:layout_height="21dp"
+            android:layout_marginTop="32dp"
+            android:labelFor="@id/editTextName"
+            android:text="@string/name"
+            app:layout_constraintStart_toStartOf="@+id/editTextName"
+            app:layout_constraintTop_toBottomOf="@+id/textViewTitle" />
+
+        <EditText
+            android:id="@+id/editTextName"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:ems="16"
+            android:hint="@string/type_name"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewName" />
+
+        <TextView
+            android:id="@+id/textViewArtist"
+            android:layout_width="42dp"
+            android:layout_height="21dp"
+            android:layout_marginTop="24dp"
+            android:labelFor="@id/editTextArtist"
+            android:text="@string/artist"
+            app:layout_constraintStart_toStartOf="@+id/editTextArtist"
+            app:layout_constraintTop_toBottomOf="@+id/editTextName" />
+
+        <EditText
+            android:id="@+id/editTextArtist"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:ems="16"
+            android:hint="@string/artist_name"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewArtist" />
+
+        <TextView
+            android:id="@+id/textViewYear"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:labelFor="@id/editTextYear"
+            android:text="@string/releaseYear"
+            app:layout_constraintStart_toStartOf="@+id/editTextYear"
+            app:layout_constraintTop_toBottomOf="@+id/editTextArtist" />
+
+        <EditText
+            android:id="@+id/editTextYear"
+            android:layout_width="306dp"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/release_year"
+            android:inputType="number"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewYear" />
+
+        <TextView
+            android:id="@+id/textViewGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:labelFor="@id/editTextGenre"
+            android:text="@string/genre"
+            app:layout_constraintStart_toStartOf="@+id/editTextGenre"
+            app:layout_constraintTop_toBottomOf="@+id/editTextYear" />
+
+        <EditText
+            android:id="@+id/editTextGenre"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:ems="10"
+            android:hint="@string/record_genre"
+            android:inputType="text"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewGenre" />
+
+        <TextView
+            android:id="@+id/textViewCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:labelFor="@id/spinnerCondition"
+            android:text="@string/condition"
+            app:layout_constraintStart_toStartOf="@+id/spinnerCondition"
+            app:layout_constraintTop_toBottomOf="@+id/editTextGenre" />
+
+        <Spinner
+            android:id="@+id/spinnerCondition"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            android:entries="@array/conditions"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewCondition" />
+
+        <CheckBox
+            android:id="@+id/checkBoxHasVinyl"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:layout_marginTop="24dp"
+            android:text="@string/already_has_vinyl"
+            app:layout_constraintStart_toStartOf="@+id/textViewSpeed"
+            app:layout_constraintTop_toBottomOf="@+id/spinnerCondition" />
+
+        <TextView
+            android:id="@+id/textViewSpeed"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:labelFor="@id/radioGroupRPM"
+            android:text="@string/speed"
+            app:layout_constraintStart_toStartOf="@+id/radioGroupRPM"
+            app:layout_constraintTop_toBottomOf="@+id/checkBoxHasVinyl" />
+
+        <RadioGroup
+            android:id="@+id/radioGroupRPM"
+            android:layout_width="122dp"
+            android:layout_height="0dp"
+            android:layout_marginStart="24dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/textViewSpeed">
+
+            <RadioButton
+                android:id="@+id/radioButton33rpm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/speed_33rpm" />
+
+            <RadioButton
+                android:id="@+id/radioButton45rpm"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="@string/speed_45rpm" />
+        </RadioGroup>
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</ScrollView>

@@ -1,0 +1,12 @@
+# Android Studio
+.idea/
+.gradle/
+local.properties
+*.iml
+build/
+captures/
+.cxx/
+.externalNativeBuild/
+
+# OS files
+.DS_Store

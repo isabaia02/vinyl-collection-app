@@ -1,0 +1,10 @@
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <!-- Base application theme. -->
+    <style name="Theme.ThemeStylesIcons" parent="Theme.Material3.Dark">
+        <item name="colorPrimary">@color/orange</item>
+        <item name="colorPrimaryVariant">@color/darkOrange</item>
+        <item name="colorOnPrimary">@color/white</item>
+        <item name="android:textColorLink">@color/yellow</item>
+    </style>
+    <color name="selectedColor">@color/transparent_gray_night</color>
+</resources>

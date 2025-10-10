@@ -1,0 +1,71 @@
+<resources>
+    <string name="app_name">Vinyl Record Collection</string>
+    <string name="author_email" translatable="false"><u>ibaia@alunos.utfpr.edu.br</u></string>
+    <string name="name">Name *</string>
+    <string name="artist">Artist *</string>
+    <string name="releaseYear">Release Year</string>
+    <string name="genre">Genre</string>
+    <string name="condition">Condition</string>
+    <string name="save">Save</string>
+    <string name="clear">Clear</string>
+    <string name="insira_um_nome">Insert a name</string>
+    <string name="insira_um_artista">Insert an artist</string>
+    <string name="value_name">Name:</string>
+    <string name="artist_value">Artist:</string>
+    <string name="already_has_vinyl">I already own this record</string>
+    <string name="releaseYearHasToBeInteger">Release year must be a number</string>
+    <string name="conditionHasToBeInteger">Condition must be a number</string>
+    <string name="conditionHasToBeBetween1and5">Condition must be a number between 1 and 5</string>
+    <string name="release_value">Release year:</string>
+    <string name="genre_value">Genre:</string>
+    <string name="condition_value">"Condition: "</string>
+    <string name="dont_have_vinyl">I don\'t own this record</string>
+    <string name="speed_33rpm" translatable="false">33 RPM</string>
+    <string name="speed_45rpm" translatable="false">45 RPM</string>
+    <string name="selectSpeed">Select one of the speed options</string>
+    <string name="speed_value">Speed:</string>
+    <string name="speed">Speed</string>
+    <string name="campos_apagados_com_sucesso">Fields sucessfully cleared!</string>
+    <string name="new_spinner_item">New</string>
+    <string name="excelent_spinner_item">Excelent</string>
+    <string name="very_good_spinner_item">Very Good</string>
+    <string name="good_spinner_item">Good</string>
+    <string name="regular_spinner_item">Regular</string>
+    <string name="bad_spinner_item">Bad</string>
+    <string name="errorSpinnerEmpty">Spinner is empty</string>
+    <string name="insira_o_genero">Insert the genre</string>
+    <string name="my_collection">My record collection</string>
+    <string name="disco_name">Record: \"</string>
+    <string name="logo_description">UTFPR logo</string>
+    <string name="author_name">Author: <a href="https://github.com/isabaia02">Isadora Costa Baía</a></string>
+    <string name="author_course">"Course: Software Engineering"</string>
+    <string name="author_institution">FEDERAL UNIVERSITY OF TECHNOLOGY - PARANÁ</string>
+    <string name="app_description">The app aims to allow vinyl record collectors to organize, register, and browse their collections in a simple and accessible way, without relying on the internet. Users can register records with detailed information and link them to artists, as well as browse their collection with filters and searches.</string>
+    <string name="about_button">About</string>
+    <string name="my_discs_title">My records</string>
+    <string name="add_disc">Add</string>
+    <string name="new_disc">New record</string>
+    <string name="nenhum_aplicativo_para_abrir_p_ginas_web">No app available to open web pages</string>
+    <string name="nenhum_aplicativo_para_enviar_o_email">No app available to send email</string>
+    <string name="edit">Edit</string>
+    <string name="delete">Delete</string>
+    <string name="edit_disc">Edit record</string>
+    <string name="sort">Sort</string>
+    <string name="restore_preferences">Restore Preferences</string>
+    <string name="config_back_to_default">Configs back to default</string>
+    <string name="suggest_condition">Suggest Condition</string>
+    <string name="type_name">Record Name</string>
+    <string name="artist_name">Artist Name</string>
+    <string name="release_year">Release year</string>
+    <string name="record_genre">Record Genre</string>
+    <string name="warning">Warning</string>
+    <string name="ok" translatable="false">OK</string>
+    <string name="confirmation">Confirmation</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="do_you_want_to_delete">Do you want to delete \"%1$s\"</string>
+    <string name="do_you_want_to_restore_preferences">Do you want to restore preferences?</string>
+    <string name="undo">Undo</string>
+    <string name="data_updated_successfully">Data updated successfully</string>
+    <string name="type_conversion_error">Type conversion error</string>
+</resources>

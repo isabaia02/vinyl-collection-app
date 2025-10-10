@@ -1,0 +1,95 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string-array name="conditions">
+        <item>@string/new_spinner_item</item>
+        <item>@string/excelent_spinner_item</item>
+        <item>@string/very_good_spinner_item</item>
+        <item>@string/good_spinner_item</item>
+        <item>@string/regular_spinner_item</item>
+        <item>@string/bad_spinner_item</item>
+    </string-array>
+    <string-array name="disc_title">
+        <item>Djavan</item>
+        <item>Olhar para Trás</item>
+        <item>Me Chama de Gato de Sou Sua</item>
+        <item>Dots and Loops</item>
+        <item>Lo Borges</item>
+        <item>Cabeça Dinossauro</item>
+        <item>Brat</item>
+        <item>Acabou Chorare</item>
+        <item>In Rainbows</item>
+        <item>Grauzone</item>
+    </string-array>
+    <string-array name="artist_name">
+        <item>Djavan</item>
+        <item>Terraplana</item>
+        <item>Ana Frango Elétrico</item>
+        <item>Stereolab</item>
+        <item>Lo Borges</item>
+        <item>Titãs</item>
+        <item>Charli XCX</item>
+        <item>Novos Baianos</item>
+        <item>Radiohead</item>
+        <item>Grauzone</item>
+    </string-array>
+    <integer-array name="releaseYear_int">
+        <item>1989</item>
+        <item>2019</item>
+        <item>2023</item>
+        <item>1997</item>
+        <item>1972</item>
+        <item>1986</item>
+        <item>2024</item>
+        <item>1972</item>
+        <item>2007</item>
+        <item>1981</item>
+    </integer-array>
+    <string-array name="disc_genre">
+        <item>Música Popular Brasileira</item>
+        <item>Indie</item>
+        <item>MPB/Pop Experimental</item>
+        <item>Post-Rock / Indie</item>
+        <item>MPB/Clube da Esquina</item>
+        <item>Rock Brasileiro</item>
+        <item>Hyperpop</item>
+        <item>MPB</item>
+        <item>Alternative Rock</item>
+        <item>New Wave</item>
+    </string-array>
+    <integer-array name="alreadyHave_bool">
+        <item>1</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+    <integer-array name="disc_condition">
+        <item>4</item>
+        <item>5</item>
+        <item>5</item>
+        <item>4</item>
+        <item>3</item>
+        <item>2</item>
+        <item>5</item>
+        <item>4</item>
+        <item>5</item>
+        <item>3</item>
+    </integer-array>
+    <integer-array name="disc_speed">
+        <item>0</item>
+        <item>1</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+        <item>1</item>
+        <item>0</item>
+        <item>0</item>
+        <item>0</item>
+    </integer-array>
+</resources>
