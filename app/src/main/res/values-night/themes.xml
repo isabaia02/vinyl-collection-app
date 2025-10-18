@@ -6,5 +6,12 @@
         <item name="colorOnPrimary">@color/white</item>
         <item name="android:textColorLink">@color/yellow</item>
     </style>
+    <style name="SpinnerDatePicker" parent="ThemeOverlay.Material3.Dark">
+        <item name="android:datePickerStyle">@style/SpinnerDatePickerStyle</item>
+        <item name="android:windowIsFloating">true</item>
+    </style>
+    <style name="SpinnerDatePickerStyle" parent="android:Widget.Material.DatePicker">
+        <item name="android:datePickerMode">spinner</item>
+    </style>
     <color name="selectedColor">@color/transparent_gray_night</color>
 </resources>

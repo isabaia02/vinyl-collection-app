@@ -7,9 +7,12 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
+import org.w3c.dom.Text;
+
 import java.util.List;
 
 import baia.isadora.vinylcollection.model.Disc;
+import baia.isadora.vinylcollection.utils.UtilsLocalDate;
 
 public class DiscAdapter extends BaseAdapter {
     private Context context;
@@ -23,6 +26,7 @@ public class DiscAdapter extends BaseAdapter {
         public TextView textViewValueCondition;
         public TextView textViewValueSpeed;
         public TextView textViewValueAlreadyHas;
+        public TextView textViewValueAcquiredDate;
     }
 
     public DiscAdapter(List<Disc> listDiscs, Context context) {
@@ -62,6 +66,7 @@ public class DiscAdapter extends BaseAdapter {
             holder.textViewValueCondition = convertView.findViewById(R.id.textViewValueCondition);
             holder.textViewValueSpeed = convertView.findViewById(R.id.textViewValueSpeed);
             holder.textViewValueAlreadyHas = convertView.findViewById(R.id.textViewValueAlreadyHas);
+            holder.textViewValueAcquiredDate = convertView.findViewById(R.id.textViewValueOwnedSince);
 
             convertView.setTag(holder);
         } else {
@@ -88,6 +93,7 @@ public class DiscAdapter extends BaseAdapter {
         } else {
             holder.textViewValueAlreadyHas.setText(R.string.dont_have_vinyl);
         }
+        holder.textViewValueAcquiredDate.setText(UtilsLocalDate.formatLocalDate(disc.getAcquiredDate()));
 
         return convertView;
     }

@@ -9,8 +9,8 @@ import androidx.room.TypeConverters;
 
 import baia.isadora.vinylcollection.model.Disc;
 
-@Database(entities = {Disc.class}, version = 1)
-@TypeConverters({ConvertDiscSpeed.class})
+@Database(entities = {Disc.class}, version = 3)
+@TypeConverters({ConvertDiscSpeed.class, ConvertLocalDate.class})
 public abstract class DiscsDatabase extends RoomDatabase {
     public abstract DiscDao getDiscDao();
     private static DiscsDatabase INSTANCE;
@@ -18,7 +18,11 @@ public abstract class DiscsDatabase extends RoomDatabase {
         if(INSTANCE == null){
             synchronized (DiscsDatabase.class){
                 if(INSTANCE == null){
-                    INSTANCE = Room.databaseBuilder(context, DiscsDatabase.class, "discs.db").allowMainThreadQueries().build();
+                    Builder builder = Room.databaseBuilder(context, DiscsDatabase.class, "discs.db");
+                    builder.allowMainThreadQueries();
+                    builder.addMigrations(new MigrateDbVersion_1());
+                    builder.addMigrations(new MigrateDbVersion_2());
+                    INSTANCE = (DiscsDatabase) builder.build();
                 }
             }
         }

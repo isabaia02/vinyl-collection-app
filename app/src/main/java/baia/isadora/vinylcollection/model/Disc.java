@@ -5,6 +5,7 @@ import androidx.room.ColumnInfo;
 import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
+import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Objects;
 
@@ -33,8 +34,9 @@ public class Disc implements Cloneable {
     private boolean alreadyHave;
     private int condition;
     private DiscSpeed discSpeed;
+    private LocalDate acquiredDate;
 
-    public Disc(String name, String artist, int releaseYear, String genre, boolean alreadyHave, int condition, DiscSpeed discSpeed) {
+    public Disc(String name, String artist, int releaseYear, String genre, boolean alreadyHave, int condition, DiscSpeed discSpeed, LocalDate acquiredDate) {
         this.name = name;
         this.artist = artist;
         this.releaseYear = releaseYear;
@@ -42,6 +44,15 @@ public class Disc implements Cloneable {
         this.alreadyHave = alreadyHave;
         this.condition = condition;
         this.discSpeed = discSpeed;
+        this.acquiredDate = acquiredDate;
+    }
+
+    public LocalDate getAcquiredDate() {
+        return acquiredDate;
+    }
+
+    public void setAcquiredDate(LocalDate acquiredDate) {
+        this.acquiredDate = acquiredDate;
     }
 
     public long getId() {
@@ -118,12 +129,18 @@ public class Disc implements Cloneable {
     public boolean equals(Object o) {
         if (o == null || getClass() != o.getClass()) return false;
         Disc disc = (Disc) o;
+        if(acquiredDate == null && disc.acquiredDate != null){
+            return false;
+        }
+        if(acquiredDate != null && !acquiredDate.equals(disc.acquiredDate)){
+            return false;
+        }
         return releaseYear == disc.releaseYear && alreadyHave == disc.alreadyHave && condition == disc.condition && Objects.equals(name, disc.name) && Objects.equals(artist, disc.artist) && Objects.equals(genre, disc.genre) && discSpeed == disc.discSpeed;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, artist, releaseYear, genre, alreadyHave, condition, discSpeed);
+        return Objects.hash(name, artist, releaseYear, genre, alreadyHave, condition, discSpeed, acquiredDate);
     }
 
     @Override

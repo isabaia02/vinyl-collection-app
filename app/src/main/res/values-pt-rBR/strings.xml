@@ -68,4 +68,7 @@
     <string name="error_trying_to_delete">Erro ao deletar</string>
     <string name="error_trying_to_insert">"Erro ao inserir "</string>
     <string name="error_trying_to_update">Erro ao editar</string>
+    <string name="acquired_date">Data de compra</string>
+    <string name="acquired_date_cannot_be_empty">Data de compra não pode estar vazio</string>
+    <string name="own_since">Possuo desde:</string>
 </resources>

@@ -1,5 +1,6 @@
 package baia.isadora.vinylcollection;
 
+import android.app.DatePickerDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -9,6 +10,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.CheckBox;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
@@ -24,10 +26,13 @@ import androidx.core.view.WindowInsetsCompat;
 
 import com.google.android.material.snackbar.Snackbar;
 
+import java.time.LocalDate;
+
 import baia.isadora.vinylcollection.model.Disc;
 import baia.isadora.vinylcollection.model.DiscSpeed;
 import baia.isadora.vinylcollection.persistency.DiscsDatabase;
 import baia.isadora.vinylcollection.utils.UtilsAlert;
+import baia.isadora.vinylcollection.utils.UtilsLocalDate;
 
 public class NewVinylActivity extends AppCompatActivity {
 
@@ -44,11 +49,12 @@ public class NewVinylActivity extends AppCompatActivity {
     public static final String KEY_LAST_CONDITION = "LAST_CONDITION";
     public static final int NEW_MODE = 0;
     public static final int EDIT_MODE = 1;
-    private EditText editTextName, editTextArtist, editTextReleaseYear, editTextGenre;
+    private EditText editTextName, editTextArtist, editTextReleaseYear, editTextGenre, editTextAcquiredDate;
     private CheckBox checkBoxHasVinyl;
     private RadioGroup radioGroupRPM;
     private Spinner spinnerCondition;
     private RadioButton radioButton33, radioButton45;
+    private LocalDate acquiredDate;
     private int mode;
     private Disc originalDisc;
     private boolean suggestCondition = false;
@@ -69,11 +75,20 @@ public class NewVinylActivity extends AppCompatActivity {
         editTextArtist = findViewById(R.id.editTextArtist);
         editTextReleaseYear = findViewById(R.id.editTextYear);
         editTextGenre = findViewById(R.id.editTextGenre);
+        editTextAcquiredDate = findViewById(R.id.editTextDate);
         checkBoxHasVinyl = findViewById(R.id.checkBoxHasVinyl);
         radioGroupRPM = findViewById(R.id.radioGroupRPM);
         spinnerCondition = findViewById(R.id.spinnerCondition);
         radioButton33 = findViewById(R.id.radioButton33rpm);
         radioButton45 = findViewById(R.id.radioButton45rpm);
+
+        editTextAcquiredDate.setFocusable(false);
+        editTextAcquiredDate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                showDatePickerDialog();
+            }
+        });
 
         readPreferences();
 
@@ -87,6 +102,7 @@ public class NewVinylActivity extends AppCompatActivity {
                 if(suggestCondition){
                     spinnerCondition.setSelection(lastCondition);
                 }
+                acquiredDate = LocalDate.now();
             } else {
                 setTitle(getString(R.string.edit_disc));
 
@@ -99,6 +115,11 @@ public class NewVinylActivity extends AppCompatActivity {
                 editTextArtist.setText(originalDisc.getArtist());
                 editTextReleaseYear.setText(String.valueOf(originalDisc.getReleaseYear()));
                 editTextGenre.setText(originalDisc.getGenre());
+
+                if (originalDisc.getAcquiredDate() != null){
+                    acquiredDate = originalDisc.getAcquiredDate();
+                }
+
                 checkBoxHasVinyl.setChecked(originalDisc.isAlreadyHave());
                 spinnerCondition.setSelection(originalDisc.getCondition());
 
@@ -115,12 +136,26 @@ public class NewVinylActivity extends AppCompatActivity {
         }
 
     }
+    private void showDatePickerDialog(){
+        DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
+            @Override
+            public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
+                acquiredDate = LocalDate.of(year, month + 1, dayOfMonth);
+                editTextAcquiredDate.setText(UtilsLocalDate.formatLocalDate(acquiredDate));
+            }
+        };
 
+        DatePickerDialog picker = new DatePickerDialog(this, R.style.SpinnerDatePicker, listener, acquiredDate.getYear(), acquiredDate.getMonthValue() -1, acquiredDate.getDayOfMonth());
+        long maxDateMillis = UtilsLocalDate.toMiliseconds(LocalDate.now());
+        picker.getDatePicker().setMaxDate(maxDateMillis);
+        picker.show();
+    }
     public void clearForm(){
         final String name = editTextName.getText().toString();
         final String artist = editTextArtist.getText().toString();
         final String releaseYear = editTextReleaseYear.getText().toString();
         final String genre = editTextGenre.getText().toString();
+        final LocalDate oldAcquiredDate = acquiredDate;
         final boolean hasVinyl = checkBoxHasVinyl.isChecked();
         final int radioButtonRPM = radioGroupRPM.getCheckedRadioButtonId();
         final int condition = spinnerCondition.getSelectedItemPosition();
@@ -131,6 +166,8 @@ public class NewVinylActivity extends AppCompatActivity {
         editTextArtist.setText(null);
         editTextReleaseYear.setText(null);
         editTextGenre.setText(null);
+        editTextAcquiredDate.setText(null);
+        acquiredDate = LocalDate.now();
         checkBoxHasVinyl.setChecked(false);
         radioGroupRPM.clearCheck();
         spinnerCondition.setSelection(0);
@@ -145,6 +182,8 @@ public class NewVinylActivity extends AppCompatActivity {
                 editTextArtist.setText(artist);
                 editTextReleaseYear.setText(releaseYear);
                 editTextGenre.setText(genre);
+                acquiredDate = oldAcquiredDate;
+                editTextAcquiredDate.setText(UtilsLocalDate.formatLocalDate(acquiredDate));
                 checkBoxHasVinyl.setChecked(hasVinyl);
                 if(radioButtonRPM == R.id.radioButton33rpm){
                     radioButton33.setChecked(true);
@@ -193,6 +232,12 @@ public class NewVinylActivity extends AppCompatActivity {
             return;
         }
 
+        String acquiredDateString = editTextAcquiredDate.getText().toString();
+        if(acquiredDateString == null || acquiredDateString.trim().isEmpty()){
+            UtilsAlert.showWarning(this, R.string.acquired_date_cannot_be_empty);
+            return;
+        }
+
         int condition = spinnerCondition.getSelectedItemPosition();
         if(condition == AdapterView.INVALID_POSITION){
             UtilsAlert.showWarning(this,R.string. errorSpinnerEmpty);
@@ -221,7 +266,7 @@ public class NewVinylActivity extends AppCompatActivity {
 
         boolean hasVinyl = checkBoxHasVinyl.isChecked();
 
-        Disc disc = new Disc(name, artist, releaseYear, genre, hasVinyl, condition, vinylSpeed);
+        Disc disc = new Disc(name, artist, releaseYear, genre, hasVinyl, condition, vinylSpeed, acquiredDate);
 
         if(disc.equals(originalDisc)){
             setResult(NewVinylActivity.RESULT_CANCELED);
