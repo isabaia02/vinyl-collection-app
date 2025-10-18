@@ -35,6 +35,7 @@ import java.util.List;
 
 import baia.isadora.vinylcollection.model.Disc;
 import baia.isadora.vinylcollection.model.DiscSpeed;
+import baia.isadora.vinylcollection.persistency.DiscsDatabase;
 import baia.isadora.vinylcollection.utils.UtilsAlert;
 
 public class ListDiscsActivity extends AppCompatActivity {
@@ -113,12 +114,13 @@ public class ListDiscsActivity extends AppCompatActivity {
     }
 
     private void populateListDiscs(){
-        listDiscs = new ArrayList<>();
+        DiscsDatabase database = DiscsDatabase.getInstance(this);
 
-        Disc disc;
-        boolean alreadyHave;
-        DiscSpeed discSpeed;
-        DiscSpeed[] discsSpeeds = DiscSpeed.values();
+        if(sortGrowing){
+            listDiscs = database.getDiscDao().queryAllAscending();
+        } else {
+            listDiscs = database.getDiscDao().queryAllDownward();
+        }
 
         adapterDisc = new DiscAdapter(listDiscs, this);
 
@@ -167,15 +169,10 @@ public class ListDiscsActivity extends AppCompatActivity {
 
                         Bundle bundle = intent.getExtras();
                         if (bundle != null){
-                            String name = bundle.getString(NewVinylActivity.KEY_NOME);
-                            String artist = bundle.getString(NewVinylActivity.KEY_ARTIST);
-                            int releaseYear = bundle.getInt(NewVinylActivity.KEY_RELEASE_YEAR);
-                            String genre = bundle.getString(NewVinylActivity.KEY_GENRE);
-                            boolean alreadyHave = bundle.getBoolean(NewVinylActivity.KEY_HAS_VINYL);
-                            int condition = bundle.getInt(NewVinylActivity.KEY_CONDITION);
-                            String discSpeed = bundle.getString(NewVinylActivity.KEY_VINYL_SPEED);
+                            long id = bundle.getLong(NewVinylActivity.KEY_ID);
 
-                            Disc disc = new Disc(name, artist, releaseYear, genre, alreadyHave, condition, DiscSpeed.valueOf(discSpeed));
+                            DiscsDatabase database = DiscsDatabase.getInstance(ListDiscsActivity.this);
+                            Disc disc = database.getDiscDao().queryForId(id);
 
                             listDiscs.add(disc);
 
@@ -228,11 +225,19 @@ public class ListDiscsActivity extends AppCompatActivity {
     }
 
     private void deleteDisc(){
-        Disc disc = listDiscs.get(selectedPosition);
+        final Disc disc = listDiscs.get(selectedPosition);
         String message = getString(R.string.do_you_want_to_delete, disc.getName());
         DialogInterface.OnClickListener listenerYes = new DialogInterface.OnClickListener() {
             @Override
             public void onClick(DialogInterface dialog, int which) {
+                DiscsDatabase database = DiscsDatabase.getInstance(ListDiscsActivity.this);
+                int alteredQuant = database.getDiscDao().delete(disc);
+
+                if(alteredQuant != 1){
+                    UtilsAlert.showWarning(ListDiscsActivity.this, R.string.error_trying_to_delete);
+                    return;
+                }
+
                 listDiscs.remove(selectedPosition);
                 adapterDisc.notifyDataSetChanged();
                 actionMode.finish();
@@ -250,33 +255,13 @@ public class ListDiscsActivity extends AppCompatActivity {
 
                         Bundle bundle = intent.getExtras();
                         if (bundle != null){
-                            String name = bundle.getString(NewVinylActivity.KEY_NOME);
-                            String artist = bundle.getString(NewVinylActivity.KEY_ARTIST);
-                            int releaseYear = bundle.getInt(NewVinylActivity.KEY_RELEASE_YEAR);
-                            String genre = bundle.getString(NewVinylActivity.KEY_GENRE);
-                            boolean alreadyHave = bundle.getBoolean(NewVinylActivity.KEY_HAS_VINYL);
-                            int condition = bundle.getInt(NewVinylActivity.KEY_CONDITION);
-                            String discSpeedText = bundle.getString(NewVinylActivity.KEY_VINYL_SPEED);
+                            final Disc originalDisc = listDiscs.get(selectedPosition);
 
-                            final Disc disc = listDiscs.get(selectedPosition);
-                            final Disc cloneDisc;
-                            try {
-                                cloneDisc = (Disc)disc.clone();
-                            } catch (CloneNotSupportedException e) {
-                                e.printStackTrace();
-                                UtilsAlert.showWarning(ListDiscsActivity.this, R.string.type_conversion_error);
-                                return;
-                            }
+                            long id = bundle.getLong(NewVinylActivity.KEY_ID);
+                            final DiscsDatabase database = DiscsDatabase.getInstance(ListDiscsActivity.this);
+                            final Disc editedDisc = database.getDiscDao().queryForId(id);
 
-                            disc.setName(name);
-                            disc.setArtist(artist);
-                            disc.setCondition(condition);
-                            disc.setReleaseYear(releaseYear);
-                            disc.setGenre(genre);
-                            disc.setAlreadyHave(alreadyHave);
-
-                            DiscSpeed discSpeed = DiscSpeed.valueOf(discSpeedText);
-                            disc.setDiscSpeed(discSpeed);
+                            listDiscs.set(selectedPosition, editedDisc);
 
                             sortList();
 
@@ -287,8 +272,14 @@ public class ListDiscsActivity extends AppCompatActivity {
                             snackBar.setAction(R.string.undo, new View.OnClickListener() {
                                 @Override
                                 public void onClick(View v) {
-                                    listDiscs.remove(disc);
-                                    listDiscs.add(cloneDisc);
+                                    int alteredQuant = database.getDiscDao().update(originalDisc);
+                                    if(alteredQuant != 1){
+                                        UtilsAlert.showWarning(ListDiscsActivity.this, R.string.error_trying_to_update);
+                                        return;
+                                    }
+
+                                    listDiscs.remove(editedDisc);
+                                    listDiscs.add(originalDisc);
 
                                     sortList();
                                 }
@@ -309,13 +300,7 @@ public class ListDiscsActivity extends AppCompatActivity {
         Intent intentOpening = new Intent(this, NewVinylActivity.class);
         intentOpening.putExtra(NewVinylActivity.KEY_MODE, NewVinylActivity.EDIT_MODE);
 
-        intentOpening.putExtra(NewVinylActivity.KEY_NOME, disc.getName());
-        intentOpening.putExtra(NewVinylActivity.KEY_ARTIST, disc.getArtist());
-        intentOpening.putExtra(NewVinylActivity.KEY_RELEASE_YEAR, disc.getReleaseYear());
-        intentOpening.putExtra(NewVinylActivity.KEY_HAS_VINYL, disc.isAlreadyHave());
-        intentOpening.putExtra(NewVinylActivity.KEY_VINYL_SPEED, disc.getDiscSpeed().toString());
-        intentOpening.putExtra(NewVinylActivity.KEY_CONDITION, disc.getCondition());
-        intentOpening.putExtra(NewVinylActivity.KEY_GENRE, disc.getGenre());
+        intentOpening.putExtra(NewVinylActivity.KEY_ID, disc.getId());
 
         launcherEditDisc.launch(intentOpening);
     }

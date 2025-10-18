@@ -25,12 +25,12 @@
     <string name="selectSpeed">Select one of the speed options</string>
     <string name="speed_value">Speed:</string>
     <string name="speed">Speed</string>
-    <string name="campos_apagados_com_sucesso">Fields sucessfully cleared!</string>
+    <string name="campos_apagados_com_sucesso">Fields successfully cleared!</string>
     <string name="new_spinner_item">New</string>
-    <string name="excelent_spinner_item">Excelent</string>
+    <string name="excelent_spinner_item">Excellent</string>
     <string name="very_good_spinner_item">Very Good</string>
     <string name="good_spinner_item">Good</string>
-    <string name="regular_spinner_item">Regular</string>
+    <strxsing name="regular_spinner_item">Regular</strxsing>
     <string name="bad_spinner_item">Bad</string>
     <string name="errorSpinnerEmpty">Spinner is empty</string>
     <string name="insira_o_genero">Insert the genre</string>
@@ -68,4 +68,7 @@
     <string name="undo">Undo</string>
     <string name="data_updated_successfully">Data updated successfully</string>
     <string name="type_conversion_error">Type conversion error</string>
+    <string name="error_trying_to_update">Error trying to update</string>
+    <string name="error_trying_to_delete">Error trying to delete</string>
+    <string name="error_trying_to_insert">Error trying to insert</string>
 </resources>

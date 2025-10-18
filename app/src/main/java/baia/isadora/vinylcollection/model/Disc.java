@@ -6,6 +6,7 @@ import androidx.room.Entity;
 import androidx.room.PrimaryKey;
 
 import java.util.Comparator;
+import java.util.Objects;
 
 @Entity
 public class Disc implements Cloneable {
@@ -109,8 +110,20 @@ public class Disc implements Cloneable {
 
     @NonNull
     @Override
-    protected Object clone() throws CloneNotSupportedException {
+    public Object clone() throws CloneNotSupportedException {
         return super.clone();
+    }
+
+    @Override
+    public boolean equals(Object o) {
+        if (o == null || getClass() != o.getClass()) return false;
+        Disc disc = (Disc) o;
+        return releaseYear == disc.releaseYear && alreadyHave == disc.alreadyHave && condition == disc.condition && Objects.equals(name, disc.name) && Objects.equals(artist, disc.artist) && Objects.equals(genre, disc.genre) && discSpeed == disc.discSpeed;
+    }
+
+    @Override
+    public int hashCode() {
+        return Objects.hash(name, artist, releaseYear, genre, alreadyHave, condition, discSpeed);
     }
 
     @Override

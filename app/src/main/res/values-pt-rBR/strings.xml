@@ -65,4 +65,7 @@
     <string name="undo">Desfazer</string>
     <string name="data_updated_successfully">Dados atualizados com sucesso</string>
     <string name="type_conversion_error">Erro de conversão de tipos</string>
+    <string name="error_trying_to_delete">Erro ao deletar</string>
+    <string name="error_trying_to_insert">"Erro ao inserir "</string>
+    <string name="error_trying_to_update">Erro ao editar</string>
 </resources>

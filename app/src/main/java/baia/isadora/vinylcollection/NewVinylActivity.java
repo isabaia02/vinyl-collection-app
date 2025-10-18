@@ -26,17 +26,19 @@ import com.google.android.material.snackbar.Snackbar;
 
 import baia.isadora.vinylcollection.model.Disc;
 import baia.isadora.vinylcollection.model.DiscSpeed;
+import baia.isadora.vinylcollection.persistency.DiscsDatabase;
 import baia.isadora.vinylcollection.utils.UtilsAlert;
 
 public class NewVinylActivity extends AppCompatActivity {
 
-    public static final String KEY_NOME = "KEY_NOME";
-    public static final String KEY_ARTIST = "KEY_ARTIST";
-    public static final String KEY_RELEASE_YEAR = "KEY_RELEASE_YEAR";
-    public static final String KEY_HAS_VINYL = "KEY_HAS_VINYL";
-    public static final String KEY_VINYL_SPEED = "KEY_VINYL_SPEED";
-    public static final String KEY_CONDITION = "KEY_CONDITION";
-    public static final String KEY_GENRE = "KEY_GENRE";
+//    public static final String KEY_NOME = "KEY_NOME";
+//    public static final String KEY_ARTIST = "KEY_ARTIST";
+//    public static final String KEY_RELEASE_YEAR = "KEY_RELEASE_YEAR";
+//    public static final String KEY_HAS_VINYL = "KEY_HAS_VINYL";
+//    public static final String KEY_VINYL_SPEED = "KEY_VINYL_SPEED";
+//    public static final String KEY_CONDITION = "KEY_CONDITION";
+//    public static final String KEY_GENRE = "KEY_GENRE";
+    public static final String KEY_ID = "ID";
     public static final String KEY_MODE = "MODO";
     public static final String KEY_SUGGEST_CONDITION = "SUGGEST_CONDITION";
     public static final String KEY_LAST_CONDITION = "LAST_CONDITION";
@@ -88,30 +90,27 @@ public class NewVinylActivity extends AppCompatActivity {
             } else {
                 setTitle(getString(R.string.edit_disc));
 
-                String name = bundle.getString(NewVinylActivity.KEY_NOME);
-                String artist = bundle.getString(NewVinylActivity.KEY_ARTIST);
-                int releaseYear = bundle.getInt(NewVinylActivity.KEY_RELEASE_YEAR);
-                String genre = bundle.getString(NewVinylActivity.KEY_GENRE);
-                boolean alreadyHave = bundle.getBoolean(NewVinylActivity.KEY_HAS_VINYL);
-                int condition = bundle.getInt(NewVinylActivity.KEY_CONDITION);
-                String discSpeedText = bundle.getString(NewVinylActivity.KEY_VINYL_SPEED);
+                long id = bundle.getLong(KEY_ID);
+                DiscsDatabase database = DiscsDatabase.getInstance(this);
 
-                DiscSpeed discSpeed = DiscSpeed.valueOf(discSpeedText);
+                originalDisc = database.getDiscDao().queryForId(id);
 
-                originalDisc = new Disc(name, artist, releaseYear, genre, alreadyHave, condition, discSpeed);
-                editTextName.setText(name);
-                editTextArtist.setText(artist);
-                editTextReleaseYear.setText(String.valueOf(releaseYear));
-                editTextGenre.setText(genre);
-                checkBoxHasVinyl.setChecked(alreadyHave);
-                radioGroupRPM.clearCheck();
-                spinnerCondition.setSelection(condition);
+                editTextName.setText(originalDisc.getName());
+                editTextArtist.setText(originalDisc.getArtist());
+                editTextReleaseYear.setText(String.valueOf(originalDisc.getReleaseYear()));
+                editTextGenre.setText(originalDisc.getGenre());
+                checkBoxHasVinyl.setChecked(originalDisc.isAlreadyHave());
+                spinnerCondition.setSelection(originalDisc.getCondition());
 
+                DiscSpeed discSpeed = originalDisc.getDiscSpeed();
                 if(discSpeed == DiscSpeed.RPM_33){
                     radioButton33.setChecked(true);
                 } else if(discSpeed == DiscSpeed.RPM_45){
                     radioButton45.setChecked(true);
                 }
+
+                editTextName.requestFocus();
+                editTextName.setSelection(editTextName.getText().length());
             }
         }
 
@@ -222,31 +221,37 @@ public class NewVinylActivity extends AppCompatActivity {
 
         boolean hasVinyl = checkBoxHasVinyl.isChecked();
 
-        if(mode == EDIT_MODE &&
-            name.equalsIgnoreCase(originalDisc.getName()) &&
-            artist.equalsIgnoreCase(originalDisc.getArtist()) &&
-            releaseYear == originalDisc.getReleaseYear() &&
-            hasVinyl == originalDisc.isAlreadyHave() &&
-            vinylSpeed == originalDisc.getDiscSpeed() &&
-            condition == originalDisc.getCondition() &&
-            genre.equalsIgnoreCase(originalDisc.getGenre())) {
+        Disc disc = new Disc(name, artist, releaseYear, genre, hasVinyl, condition, vinylSpeed);
 
+        if(disc.equals(originalDisc)){
             setResult(NewVinylActivity.RESULT_CANCELED);
             finish();
             return;
         }
 
+        Intent intentResponse = new Intent();
+
+        DiscsDatabase database = DiscsDatabase.getInstance(this);
+
+        if(mode == NEW_MODE){
+            long newId = database.getDiscDao().insert(disc);
+            if(newId <= 0){
+                UtilsAlert.showWarning(this, R.string.error_trying_to_insert);
+                return;
+            }
+            disc.setId(newId);
+        } else {
+            disc.setId(originalDisc.getId());
+            int alteredQuant = database.getDiscDao().update(disc);
+
+            if(alteredQuant != 1){
+                UtilsAlert.showWarning(this, R.string.error_trying_to_update);
+                return;
+            }
+        }
         saveLastCondition(condition);
 
-        Intent intentResponse = new Intent();
-        intentResponse.putExtra(KEY_NOME, name);
-        intentResponse.putExtra(KEY_ARTIST, artist);
-        intentResponse.putExtra(KEY_RELEASE_YEAR, releaseYear);
-        intentResponse.putExtra(KEY_HAS_VINYL, hasVinyl);
-        intentResponse.putExtra(KEY_VINYL_SPEED, vinylSpeed.toString());
-        intentResponse.putExtra(KEY_CONDITION, condition);
-        intentResponse.putExtra(KEY_GENRE, genre);
-
+        intentResponse.putExtra(KEY_ID, disc.getId());
         setResult(NewVinylActivity.RESULT_OK, intentResponse);
         finish();
     }
