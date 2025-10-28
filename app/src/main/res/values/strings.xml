@@ -74,4 +74,18 @@
     <string name="acquired_date">Acquired Date</string>
     <string name="acquired_date_cannot_be_empty">Acquired date cannot be empty</string>
     <string name="own_since">Owned since:</string>
+    <string name="nationality">Nationality:</string>
+    <string name="nationality_value">Nationality</string>
+    <string name="new_artist">New Artist</string>
+    <string name="edit_artist">Edit Artist</string>
+    <string name="insert_a_nationality">Insert a nationality</string>
+    <string name="my_artists">My artists</string>
+    <string name="add_artist">Add New Artist</string>
+    <string name="view_artists">View Artists</string>
+    <string name="unknown_artist">Unknown artist</string>
+    <string name="no_artists_registered">No artists registered</string>
+    <string name="check_already_own_the_record">Check "Already have record" before selecting a date.</string>
+    <string name="releaseYearRequired">Release year is required.</string>
+    <string name="releaseYearTooLong">Release year must be up to 4 digits.</string>
+    <string name="releaseYearOutOfRange">Release year must be between 1800 and the current year.</string>
 </resources>

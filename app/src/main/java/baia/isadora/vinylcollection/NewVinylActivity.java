@@ -5,10 +5,13 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
+import android.text.InputFilter;
+import android.text.InputType;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
@@ -27,7 +30,9 @@ import androidx.core.view.WindowInsetsCompat;
 import com.google.android.material.snackbar.Snackbar;
 
 import java.time.LocalDate;
+import java.util.List;
 
+import baia.isadora.vinylcollection.model.Artist;
 import baia.isadora.vinylcollection.model.Disc;
 import baia.isadora.vinylcollection.model.DiscSpeed;
 import baia.isadora.vinylcollection.persistency.DiscsDatabase;
@@ -35,14 +40,6 @@ import baia.isadora.vinylcollection.utils.UtilsAlert;
 import baia.isadora.vinylcollection.utils.UtilsLocalDate;
 
 public class NewVinylActivity extends AppCompatActivity {
-
-//    public static final String KEY_NOME = "KEY_NOME";
-//    public static final String KEY_ARTIST = "KEY_ARTIST";
-//    public static final String KEY_RELEASE_YEAR = "KEY_RELEASE_YEAR";
-//    public static final String KEY_HAS_VINYL = "KEY_HAS_VINYL";
-//    public static final String KEY_VINYL_SPEED = "KEY_VINYL_SPEED";
-//    public static final String KEY_CONDITION = "KEY_CONDITION";
-//    public static final String KEY_GENRE = "KEY_GENRE";
     public static final String KEY_ID = "ID";
     public static final String KEY_MODE = "MODO";
     public static final String KEY_SUGGEST_CONDITION = "SUGGEST_CONDITION";
@@ -52,7 +49,7 @@ public class NewVinylActivity extends AppCompatActivity {
     private EditText editTextName, editTextArtist, editTextReleaseYear, editTextGenre, editTextAcquiredDate;
     private CheckBox checkBoxHasVinyl;
     private RadioGroup radioGroupRPM;
-    private Spinner spinnerCondition;
+    private Spinner spinnerCondition, spinnerArtist;
     private RadioButton radioButton33, radioButton45;
     private LocalDate acquiredDate;
     private int mode;
@@ -72,11 +69,35 @@ public class NewVinylActivity extends AppCompatActivity {
         });
 
         editTextName = findViewById(R.id.editTextName);
-        editTextArtist = findViewById(R.id.editTextArtist);
+        spinnerArtist = findViewById(R.id.spinnerArtist);
+        DiscsDatabase database = DiscsDatabase.getInstance(this);
+        List<Artist> artists = database.getArtistDao().queryAllAscending();
+        if (artists.isEmpty()) {
+            UtilsAlert.showWarning(this, R.string.no_artists_registered);
+            spinnerArtist.setEnabled(false);
+        } else {
+            ArrayAdapter<Artist> artistAdapter = new ArrayAdapter<>(
+                    this,
+                    android.R.layout.simple_spinner_item,
+                    artists
+            );
+            artistAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+            spinnerArtist.setAdapter(artistAdapter);
+        }
         editTextReleaseYear = findViewById(R.id.editTextYear);
-        editTextGenre = findViewById(R.id.editTextGenre);
+        editTextReleaseYear.setFilters(new InputFilter[] {
+                new InputFilter.LengthFilter(4)
+        });
+        editTextReleaseYear.setInputType(InputType.TYPE_CLASS_NUMBER);
+        editTextGenre = findViewById(R.id.editTextNationality);
         editTextAcquiredDate = findViewById(R.id.editTextDate);
         checkBoxHasVinyl = findViewById(R.id.checkBoxHasVinyl);
+        checkBoxHasVinyl.setOnCheckedChangeListener((buttonView, isChecked) -> {
+            editTextAcquiredDate.setEnabled(isChecked);
+            if (!isChecked) {
+                editTextAcquiredDate.setText(null);
+            }
+        });
         radioGroupRPM = findViewById(R.id.radioGroupRPM);
         spinnerCondition = findViewById(R.id.spinnerCondition);
         radioButton33 = findViewById(R.id.radioButton33rpm);
@@ -86,7 +107,11 @@ public class NewVinylActivity extends AppCompatActivity {
         editTextAcquiredDate.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                showDatePickerDialog();
+                if (checkBoxHasVinyl.isChecked()) {
+                    showDatePickerDialog();
+                } else {
+                    UtilsAlert.showWarning(NewVinylActivity.this, R.string.check_already_own_the_record);
+                }
             }
         });
 
@@ -107,12 +132,20 @@ public class NewVinylActivity extends AppCompatActivity {
                 setTitle(getString(R.string.edit_disc));
 
                 long id = bundle.getLong(KEY_ID);
-                DiscsDatabase database = DiscsDatabase.getInstance(this);
 
                 originalDisc = database.getDiscDao().queryForId(id);
 
                 editTextName.setText(originalDisc.getName());
-                editTextArtist.setText(originalDisc.getArtist());
+
+                long artistId = originalDisc.getArtistId();
+                for (int i = 0; i < spinnerArtist.getCount(); i++) {
+                    Artist artist = (Artist) spinnerArtist.getItemAtPosition(i);
+                    if (artist.getId() == artistId) {
+                        spinnerArtist.setSelection(i);
+                        break;
+                    }
+                }
+
                 editTextReleaseYear.setText(String.valueOf(originalDisc.getReleaseYear()));
                 editTextGenre.setText(originalDisc.getGenre());
 
@@ -211,31 +244,48 @@ public class NewVinylActivity extends AppCompatActivity {
             return;
         }
 
-        String artist = editTextArtist.getText().toString();
-        if (artist.trim().isEmpty()) {
-            UtilsAlert.showWarning(this, R.string.insira_um_artista);
+        Artist selectedArtist = (Artist) spinnerArtist.getSelectedItem();
+        long artistId = selectedArtist.getId();
 
-            editTextArtist.requestFocus();
-            editTextArtist.setSelection(0);
+        String releaseYearString = editTextReleaseYear.getText().toString().trim();
+        int releaseYear;
+        if (releaseYearString.isEmpty()) {
+            UtilsAlert.showWarning(this, R.string.releaseYearRequired);
+            editTextReleaseYear.requestFocus();
             return;
         }
-
-        String releaseYearString = editTextReleaseYear.getText().toString();
-        int releaseYear;
+        if (releaseYearString.length() > 4) {
+            UtilsAlert.showWarning(this, R.string.releaseYearTooLong);
+            editTextReleaseYear.requestFocus();
+            editTextReleaseYear.setSelection(releaseYearString.length());
+            return;
+        }
         try {
             releaseYear = Integer.parseInt(releaseYearString);
         } catch (NumberFormatException e) {
             UtilsAlert.showWarning(this, R.string.releaseYearHasToBeInteger);
-
             editTextReleaseYear.requestFocus();
-            editTextReleaseYear.setSelection(0, editTextReleaseYear.getText().toString().length());
+            editTextReleaseYear.setSelection(releaseYearString.length());
+            return;
+        }
+        int currentYear = LocalDate.now().getYear();
+        if (releaseYear < 1800 || releaseYear > currentYear) {
+            UtilsAlert.showWarning(this, R.string.releaseYearOutOfRange);
+            editTextReleaseYear.requestFocus();
+            editTextReleaseYear.setSelection(releaseYearString.length());
             return;
         }
 
-        String acquiredDateString = editTextAcquiredDate.getText().toString();
-        if(acquiredDateString == null || acquiredDateString.trim().isEmpty()){
-            UtilsAlert.showWarning(this, R.string.acquired_date_cannot_be_empty);
-            return;
+        boolean hasVinyl = checkBoxHasVinyl.isChecked();
+        if (hasVinyl) {
+            String acquiredDateString = editTextAcquiredDate.getText().toString();
+            if (acquiredDateString == null || acquiredDateString.trim().isEmpty()) {
+                UtilsAlert.showWarning(this, R.string.acquired_date_cannot_be_empty);
+                editTextAcquiredDate.requestFocus();
+                return;
+            }
+        } else {
+            acquiredDate = null;
         }
 
         int condition = spinnerCondition.getSelectedItemPosition();
@@ -264,9 +314,7 @@ public class NewVinylActivity extends AppCompatActivity {
             return;
         }
 
-        boolean hasVinyl = checkBoxHasVinyl.isChecked();
-
-        Disc disc = new Disc(name, artist, releaseYear, genre, hasVinyl, condition, vinylSpeed, acquiredDate);
+        Disc disc = new Disc(name, artistId, releaseYear, genre, hasVinyl, condition, vinylSpeed, acquiredDate);
 
         if(disc.equals(originalDisc)){
             setResult(NewVinylActivity.RESULT_CANCELED);
@@ -320,7 +368,7 @@ public class NewVinylActivity extends AppCompatActivity {
         if(idMenuItem == R.id.menuItemSave){
             saveData();
             return true;
-        } else if (idMenuItem == R.id.menuItemClear){
+        } else if (idMenuItem == R.id.menuItemClearArtist){
             clearForm();
             return true;
         } else if (idMenuItem == R.id.menuItemSuggest){

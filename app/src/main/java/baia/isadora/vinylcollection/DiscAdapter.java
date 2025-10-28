@@ -7,11 +7,11 @@ import android.view.ViewGroup;
 import android.widget.BaseAdapter;
 import android.widget.TextView;
 
-import org.w3c.dom.Text;
-
 import java.util.List;
 
+import baia.isadora.vinylcollection.model.Artist;
 import baia.isadora.vinylcollection.model.Disc;
+import baia.isadora.vinylcollection.persistency.DiscsDatabase;
 import baia.isadora.vinylcollection.utils.UtilsLocalDate;
 
 public class DiscAdapter extends BaseAdapter {
@@ -60,7 +60,7 @@ public class DiscAdapter extends BaseAdapter {
 
             holder = new DiscHolder();
             holder.textViewValueName = convertView.findViewById(R.id.textViewValueName);
-            holder.textViewValueArtist = convertView.findViewById(R.id.textViewValueArtist);
+            holder.textViewValueArtist = convertView.findViewById(R.id.textViewValueNationality);
             holder.textViewValueReleaseYear = convertView.findViewById(R.id.textViewValueYear);
             holder.textViewValueGenre = convertView.findViewById(R.id.textViewValueGenre);
             holder.textViewValueCondition = convertView.findViewById(R.id.textViewValueCondition);
@@ -75,7 +75,15 @@ public class DiscAdapter extends BaseAdapter {
 
         Disc disc = listDiscs.get(position);
         holder.textViewValueName.setText(disc.getName());
-        holder.textViewValueArtist.setText(disc.getArtist());
+        DiscsDatabase database = DiscsDatabase.getInstance(context);
+        long artistId = disc.getArtistId();
+        Artist artist = database.getArtistDao().queryForId(artistId);
+
+        if (artist != null) {
+            holder.textViewValueArtist.setText(artist.getName());
+        } else {
+            holder.textViewValueArtist.setText(R.string.unknown_artist);
+        }
         holder.textViewValueReleaseYear.setText(String.valueOf(disc.getReleaseYear()));
         holder.textViewValueGenre.setText(disc.getGenre());
         holder.textViewValueCondition.setText(conditions[disc.getCondition()]);
@@ -93,7 +101,12 @@ public class DiscAdapter extends BaseAdapter {
         } else {
             holder.textViewValueAlreadyHas.setText(R.string.dont_have_vinyl);
         }
-        holder.textViewValueAcquiredDate.setText(UtilsLocalDate.formatLocalDate(disc.getAcquiredDate()));
+        if(disc.getAcquiredDate() != null){
+            holder.textViewValueAcquiredDate.setVisibility(View.VISIBLE);
+            holder.textViewValueAcquiredDate.setText(UtilsLocalDate.formatLocalDate(disc.getAcquiredDate()));
+        } else {
+            holder.textViewValueAcquiredDate.setVisibility(View.GONE);
+        }
 
         return convertView;
     }

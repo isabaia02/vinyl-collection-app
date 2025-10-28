@@ -29,7 +29,7 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
-        android:id="@+id/textViewLabelArtist"
+        android:id="@+id/textViewLabelNationality"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="12dp"
@@ -40,14 +40,14 @@
         app:layout_constraintTop_toBottomOf="@+id/textViewLabelName" />
 
     <TextView
-        android:id="@+id/textViewValueArtist"
+        android:id="@+id/textViewValueNationality"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginStart="8dp"
         android:layout_marginTop="16dp"
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/textViewLabelArtist"
+        app:layout_constraintStart_toEndOf="@+id/textViewLabelNationality"
         app:layout_constraintTop_toBottomOf="@+id/textViewValueName" />
 
     <TextView
@@ -59,7 +59,7 @@
         android:text="@string/release_value"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textViewLabelArtist" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewLabelNationality" />
 
     <TextView
         android:id="@+id/textViewValueYear"
@@ -70,7 +70,7 @@
         android:layout_marginEnd="16dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toEndOf="@+id/textViewLabelYear"
-        app:layout_constraintTop_toBottomOf="@+id/textViewValueArtist" />
+        app:layout_constraintTop_toBottomOf="@+id/textViewValueNationality" />
 
     <TextView
         android:id="@+id/textViewLabelGenre"

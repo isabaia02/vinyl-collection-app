@@ -217,7 +217,12 @@ public class ListDiscsActivity extends AppCompatActivity {
             return true;
         } else if(idMenuItem == R.id.menuItemRestore){
             confirmRestorePreferences();
-
+            return true;
+        } else if (idMenuItem == R.id.menuItemAddArtist) {
+            openNewArtist();
+            return true;
+        } else if (idMenuItem == R.id.menuItemViewArtists) {
+            openListArtists();
             return true;
         } else {
             return super.onOptionsItemSelected(item);
@@ -359,5 +364,14 @@ public class ListDiscsActivity extends AppCompatActivity {
         editor.commit();
 
         sortGrowing = DEFAULT_PREFERENCES_SORT;
+    }
+    private void openNewArtist() {
+        Intent intentOpening = new Intent(this, NewArtistActivity.class);
+        intentOpening.putExtra(NewArtistActivity.KEY_MODE, NewArtistActivity.NEW_MODE);
+        startActivity(intentOpening);
+    }
+    private void openListArtists() {
+        Intent intentOpening = new Intent(this, ListArtistsActivity.class);
+        startActivity(intentOpening);
     }
 }

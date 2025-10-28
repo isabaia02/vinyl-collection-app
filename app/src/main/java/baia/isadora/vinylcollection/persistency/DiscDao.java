@@ -29,4 +29,10 @@ public interface DiscDao {
 
     @Query("SELECT * FROM disc ORDER BY name DESC")
     List<Disc> queryAllDownward();
+
+    @Query("SELECT count(*) FROM Disc WHERE artistId = :artistId")
+    int totalIdArtist(long artistId);
+
+    @Query("SELECT * FROM Disc WHERE artistId = :artistId ORDER BY name ASC")
+    List<Disc> queryByArtist(long artistId);
 }

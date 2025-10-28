@@ -1,15 +1,18 @@
 package baia.isadora.vinylcollection.model;
 
+import static androidx.room.ForeignKey.CASCADE;
+
 import androidx.annotation.NonNull;
 import androidx.room.ColumnInfo;
 import androidx.room.Entity;
+import androidx.room.ForeignKey;
 import androidx.room.PrimaryKey;
 
 import java.time.LocalDate;
 import java.util.Comparator;
 import java.util.Objects;
 
-@Entity
+@Entity(foreignKeys = {@ForeignKey(entity = Artist.class, parentColumns = "id", childColumns = "artistId", onDelete = CASCADE)})
 public class Disc implements Cloneable {
     public static Comparator<Disc> growingOrder = new Comparator<Disc>() {
         @Override
@@ -28,7 +31,8 @@ public class Disc implements Cloneable {
     @NonNull
     @ColumnInfo(index = true)
     private String name;
-    private String artist;
+    @ColumnInfo(index = true)
+    private Long artistId;
     private int releaseYear;
     private String genre;
     private boolean alreadyHave;
@@ -36,9 +40,9 @@ public class Disc implements Cloneable {
     private DiscSpeed discSpeed;
     private LocalDate acquiredDate;
 
-    public Disc(String name, String artist, int releaseYear, String genre, boolean alreadyHave, int condition, DiscSpeed discSpeed, LocalDate acquiredDate) {
+    public Disc(String name, Long artistId, int releaseYear, String genre, boolean alreadyHave, int condition, DiscSpeed discSpeed, LocalDate acquiredDate) {
         this.name = name;
-        this.artist = artist;
+        this.artistId = artistId;
         this.releaseYear = releaseYear;
         this.genre = genre;
         this.alreadyHave = alreadyHave;
@@ -71,12 +75,12 @@ public class Disc implements Cloneable {
         this.name = name;
     }
 
-    public String getArtist() {
-        return artist;
+    public Long getArtistId() {
+        return artistId;
     }
 
-    public void setArtist(String artist) {
-        this.artist = artist;
+    public void setArtistId(Long artistId) {
+        this.artistId = artistId;
     }
 
     public int getReleaseYear() {
@@ -135,18 +139,18 @@ public class Disc implements Cloneable {
         if(acquiredDate != null && !acquiredDate.equals(disc.acquiredDate)){
             return false;
         }
-        return releaseYear == disc.releaseYear && alreadyHave == disc.alreadyHave && condition == disc.condition && Objects.equals(name, disc.name) && Objects.equals(artist, disc.artist) && Objects.equals(genre, disc.genre) && discSpeed == disc.discSpeed;
+        return releaseYear == disc.releaseYear && alreadyHave == disc.alreadyHave && condition == disc.condition && Objects.equals(name, disc.name) && Objects.equals(artistId, disc.artistId) && Objects.equals(genre, disc.genre) && discSpeed == disc.discSpeed;
     }
 
     @Override
     public int hashCode() {
-        return Objects.hash(name, artist, releaseYear, genre, alreadyHave, condition, discSpeed, acquiredDate);
+        return Objects.hash(name, artistId, releaseYear, genre, alreadyHave, condition, discSpeed, acquiredDate);
     }
 
     @Override
     public String toString(){
         return name + "\n" +
-                artist + "\n" +
+                artistId + "\n" +
                 releaseYear + "\n" +
                 genre + "\n" +
                 alreadyHave + "\n" +

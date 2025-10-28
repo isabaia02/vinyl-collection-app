@@ -12,6 +12,14 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.ThemeStylesIcons">
         <activity
+            android:name=".NewArtistActivity"
+            android:exported="false"
+            android:parentActivityName=".ListDiscsActivity"/>
+        <activity
+            android:name=".ListArtistsActivity"
+            android:exported="false"
+            android:parentActivityName=".ListDiscsActivity" />
+        <activity
             android:name=".AboutActivity"
             android:exported="false"
             android:parentActivityName=".ListDiscsActivity" />
@@ -21,14 +29,15 @@
             android:launchMode="singleTask">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity
             android:name=".NewVinylActivity"
             android:exported="false"
-            android:parentActivityName=".ListDiscsActivity">
-        </activity>
+            android:parentActivityName=".ListDiscsActivity" />
+
         <meta-data
             android:name="preloaded_fonts"
             android:resource="@array/preloaded_fonts" />
