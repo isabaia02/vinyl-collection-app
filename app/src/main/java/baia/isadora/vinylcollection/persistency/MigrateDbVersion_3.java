@@ -10,7 +10,7 @@ public class MigrateDbVersion_3 extends Migration {
     }
     @Override
     public void migrate(@NonNull SupportSQLiteDatabase database) {
-        database.execSQL("CREATE TABLE IF NOT EXISTS `Artist` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `nationality` TEXT");
+        database.execSQL("CREATE TABLE IF NOT EXISTS `Artist` (`id` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `name` TEXT NOT NULL, `nationality` TEXT)");
 
     }
 }

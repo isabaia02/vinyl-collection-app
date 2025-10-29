@@ -151,6 +151,7 @@ public class NewVinylActivity extends AppCompatActivity {
 
                 if (originalDisc.getAcquiredDate() != null){
                     acquiredDate = originalDisc.getAcquiredDate();
+                    editTextAcquiredDate.setText(UtilsLocalDate.formatLocalDate(acquiredDate));
                 }
 
                 checkBoxHasVinyl.setChecked(originalDisc.isAlreadyHave());
@@ -170,6 +171,8 @@ public class NewVinylActivity extends AppCompatActivity {
 
     }
     private void showDatePickerDialog(){
+        LocalDate initialDate = (acquiredDate != null) ? acquiredDate : LocalDate.now();
+
         DatePickerDialog.OnDateSetListener listener = new DatePickerDialog.OnDateSetListener() {
             @Override
             public void onDateSet(DatePicker view, int year, int month, int dayOfMonth) {
@@ -178,7 +181,7 @@ public class NewVinylActivity extends AppCompatActivity {
             }
         };
 
-        DatePickerDialog picker = new DatePickerDialog(this, R.style.SpinnerDatePicker, listener, acquiredDate.getYear(), acquiredDate.getMonthValue() -1, acquiredDate.getDayOfMonth());
+        DatePickerDialog picker = new DatePickerDialog(this, R.style.SpinnerDatePicker, listener, initialDate.getYear(), initialDate.getMonthValue() -1, initialDate.getDayOfMonth());
         long maxDateMillis = UtilsLocalDate.toMiliseconds(LocalDate.now());
         picker.getDatePicker().setMaxDate(maxDateMillis);
         picker.show();
