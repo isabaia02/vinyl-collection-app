@@ -71,4 +71,18 @@
     <string name="acquired_date">Data de compra</string>
     <string name="acquired_date_cannot_be_empty">Data de compra não pode estar vazio</string>
     <string name="own_since">Possuo desde:</string>
+    <string name="nationality">Nacionalidade:</string>
+    <string name="nationality_value">Nacionalidade</string>
+    <string name="new_artist">Novo artista</string>
+    <string name="edit_artist">Editar artista</string>
+    <string name="insert_a_nationality">Insira uma nacionalidade</string>
+    <string name="my_artists">Meus artistas</string>
+    <string name="add_artist">Adicionar novo artista</string>
+    <string name="view_artists">Ver artistas</string>
+    <string name="unknown_artist">Artista desconhecido</string>
+    <string name="no_artists_registered">"Nenhum artista registrado "</string>
+    <string name="check_already_own_the_record">Selecione Já possuo o disco antes de selecionar uma data</string>
+    <string name="releaseYearRequired">Ano de lançamento é obrigatório</string>
+    <string name="releaseYearTooLong">Ano de lançamento deve ter no máximo 4 dígitos</string>
+    <string name="releaseYearOutOfRange">Ano de lançamento deve ser entre 1800 e o ano atual</string>
 </resources>
